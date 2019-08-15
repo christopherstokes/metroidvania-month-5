@@ -1,20 +1,17 @@
-	-- title:  game title
+-- title:  game title
 -- author: game developer
 -- desc:   short description
 -- script: lua
 colliders = {
-	--top_colliders (1)
-	{
+	-- tiles that only can be collided when falling onto them from above
+	top_colliders = {
 		[192]=true, [193]=true, [160]=true, [161]=true, [162]=true, [163]=true, [176]=true, [177]=true
 	},
-	--solid_colliders (2)
-	{
+	-- completely solid tiles that cannot be moved through
+	solid_colliders= {
 		[160]=true, [161]=true, [162]=true, [163]=true, [176]=true, [177]=true
 	}
 }
-
-
-
 
 -- tools
 function mid(a, b, c) 
@@ -34,7 +31,7 @@ end
 function lerp(a,b,t) return (1-t)*a + t*b end
 
 function collide_map(obj,aim,flag)
-	local x,y,w,h = obj.x,obj.y,obj.w,obj.h
+	local x,y,w,h = obj.x+obj.hb.xoff,obj.y+obj.hb.yoff,obj.hb.w,obj.hb.h
 	
 	local x1,y1,x2,y2,hb_w,hb_h=0,0,0,0,0,0
 	
@@ -52,10 +49,11 @@ function collide_map(obj,aim,flag)
 		hb_w, hb_h = w, 1
 	end
 
-	------- TEST ----------
-	rect(x1, y1, hb_w, hb_h, 15)
-	-----------------------
-	
+	-- test --
+	x_r, y_r, w_r, h_r = x1, y1, hb_w, hb_h
+	----------
+
+
 	--pixels to tiles
 	x1 = x1/8
 	y1 = y1/8
@@ -78,8 +76,8 @@ end
 -- player
 player = {
 	sp=1,
-	x=59,
-	y=59,
+	x=120,
+	y=68,
 	w=8,
 	h=8,
 	flp=0,
@@ -94,7 +92,8 @@ player = {
 	jumping=false,
 	falling=false,
 	sliding=false,
-	landed=true
+	landed=true,
+	hb={xoff=2, yoff=0, w=4, h=8}
 }
 
 function player_upd()
@@ -138,29 +137,45 @@ function player_upd()
 		
 		player.dy=limit_speed(player.dy,player.max_dx)
 		
-		if collide_map(player,"down",1) then
+		if collide_map(player,"down","top_colliders") then
 			player.landed=true
 			player.falling=false
 			player.dy=0
-			player.y = player.y - (player.y+player.h)%8
+			player.y = player.y - (((player.y+player.h+1) % 8) - 1)
+			-- test --
+			collide_d = "yes"
+			else collide_d = "no"
+			----------
 		end
 	elseif player.dy<0 then
 		player.jumping=true
-		if collide_map(player,"up",2) then
+		if collide_map(player,"up","solid_colliders") then
 			player.dy=0
+			-- test --
+			collide_u = "yes"
+			else collide_u = "no"
+			----------
 		end
 	end
 	
 	--check collision l/r
 	if player.dx<0 then
 		player.dx=limit_speed(player.dx,player.max_dx)
-		if collide_map(player,"left",2) then
+		if collide_map(player,"left","solid_colliders") then
 			player.dx=0
+			-- test --
+			collide_l = "yes"
+			else collide_l = "no"
+			----------
 		end
 	elseif player.dx>0 then
 		player.dx=limit_speed(player.dx,player.max_dx)
-		if collide_map(player,"right",2) then
+		if collide_map(player,"right","solid_colliders") then
 			player.dx=0
+			-- test --
+			collide_r = "yes"
+			else collide_r = "no"
+			----------
 		end
 	end
 	
@@ -209,29 +224,46 @@ function game_state:init()
 	gravity=0.3
 	friction=0.85
 
+	-- test --
+	x_r, y_r, w_r, h_r = 0,0,0,0
+	collide_l, collide_r, collide_u, collide_d = "no", "no", "no", "no"
+	----------
+
 	--simple camera
-	-- cam={x=120-player.x, y=0}
+	cam={x=120, y=68}
 end
 
 function game_state:update()
 	t=t+1
-	player_upd()
 	player_anim()
+	player_upd()
 
-	-- cam.x=math.min(120,lerp(cam.x,120-player.x,0.5))
+	
+
+	cam.x=120-player.x
+	cam.y=68-player.y
 	
 end
 
 function game_state:draw()
 	cls(1)
+	map(0,0)
 
-	-- cam.x=math.min(120,120-player.x)
-	-- local ccx,ccy=cam.x/8,cam.y/8 -- camera cell x and y
-	-- map(ccx-15,ccy-8,32,17,(cam.x%8)-8,(cam.y%8)-8)
+	-- print("Cam X: "..cam.x.."  Cam Y: "..cam.y, 12, 6)
+	-- print("PL X: "..player.x.."  PL Y: "..player.y, 12, 12)
+	-- print("DiffX: "..cam.x-player.x.."  DiffY: "..cam.y-player.y, 12, 18)
 
-	map(0, 0)
+	
 
 	spr(player.sp, player.x, player.y, 0, 1, player.flp)
+
+	-- test --
+	rect(x_r, y_r, w_r, h_r, 15)
+	print("L: "..collide_l, player.x, player.y-6)
+	print("R: "..collide_r, player.x, player.y-12)
+	print("U: "..collide_u, player.x, player.y-18)
+	print("D: "..collide_d, player.x, player.y-24)
+	----------
 end
 
 current_state = game_state
