@@ -36,21 +36,29 @@ function collide_map(obj,aim,flag)
 	local x1,y1,x2,y2,hb_w,hb_h=0,0,0,0,0,0
 	
 	if aim=="left" then
-		x1,y1,x2,y2=x-2,y,x,y+h-2
-		hb_w, hb_h = 1, h
+		x1 = x-4
+		y1 = y
+		x2 = x-3
+		y2 = y+h-2
 	elseif aim=="right" then
-		x1,y1,x2,y2=x+w+1,y,x+w+2,y+h-2
-		hb_w, hb_h = 1, h
+		x1 = x+w+3
+		y1 = y
+		x2 = x+w+4
+		y2 = y+h-2
 	elseif aim=="up" then
-		x1,y1,x2,y2=x+1,y-1,x+w-1,y
-		hb_w, hb_h = w, 1
+		x1 = x+1
+		y1 = y-1
+		x2 = x+w-1
+		y2 = y
 	elseif aim=="down" then
-		x1,y1,x2,y2=x,y+h,x+w,y+h
-		hb_w, hb_h = w, 1
+		x1 = x
+		y1 = y+h
+		x2 = x+w
+		y2 = y+h
 	end
 
 	-- test --
-	x_r, y_r, w_r, h_r = x1, y1, hb_w, hb_h
+	x_r, y_r, w_r, h_r = x1, y1, x2-x1, y2-y1
 	----------
 
 
@@ -188,8 +196,8 @@ function player_upd()
 		end
 	end
 	
-	player.x = player.x + player.dx
-	player.y = player.y + player.dy
+	player.x = math.floor(player.x + player.dx)
+	player.y = math.floor(player.y + player.dy)
 end
 
 function player_anim()
@@ -238,11 +246,11 @@ function game_state:update()
 	player_anim()
 	player_upd()
 
-	cam.x=math.min(120, lerp(cam.x,player.x-120,0.07))
-	cam.y=math.min(64, lerp(cam.y,player.y-64,0.07))
+	cam.x=player.x-120
+	cam.y=player.y-68
 
-	
-	
+	-- cam.x=math.min(120, lerp(cam.x,player.x-120,0.07))
+	-- cam.y=math.min(64, lerp(cam.y,player.y-64,0.07))
 end
 
 function game_state:draw()
