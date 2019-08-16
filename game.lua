@@ -100,6 +100,7 @@ player = {
 	jumping=false,
 	falling=false,
 	sliding_x=false,
+	sliding_y=false,
 	landed=true,
 	hb={xoff=2, yoff=0, w=4, h=8}
 }
@@ -121,7 +122,7 @@ function player_upd()
 		player.running = true
 	end
 	
-	--slide
+	--slide_x
 	if player.running
 	and not btn(2)
 	and not btn(3)
@@ -175,6 +176,13 @@ function player_upd()
 			-- collide_l = "yes"
 			-- else collide_l = "no"
 			----------
+
+			-- if not player.landed then
+			-- 	player.sliding_y = true
+			-- 	player.running = false
+			-- 	player.jumping = false
+			-- 	player.falling = false
+			-- else player.sliding_y = false	end
 		end
 	elseif player.dx>0 then
 		player.dx=limit_speed(player.dx,player.max_dx)
@@ -184,6 +192,13 @@ function player_upd()
 			-- collide_r = "yes"
 			-- else collide_r = "no"
 			----------
+
+			-- if not player.landed then
+			-- 	player.sliding_y = true
+			-- 	player.running = false
+			-- 	player.jumping = false
+			-- 	player.falling = false
+			-- else player.sliding_y = false end
 		end
 	end
 	
@@ -194,6 +209,10 @@ function player_upd()
 			player.dx=0
 			player.sliding_x=false
 		end
+	end
+
+	if player.sliding_y then
+
 	end
 	
 	player.x = math.floor(player.x + player.dx)
@@ -207,6 +226,8 @@ function player_anim()
 		player.sp=8
 	elseif player.sliding_x then
 		player.sp=9
+	elseif player.sliding_y then
+		player.sp=10
 	elseif player.running then
 		if time()-player.anim>100 then
 			player.anim=time()
@@ -249,16 +270,21 @@ function game_state:update()
 	cam.x=player.x-120
 	cam.y=player.y-68
 
+	-- cam.x=math.min(120, player.x-120)
+	-- cam.y=math.min(64, player.y-64)
+
 	-- cam.x=math.min(120, lerp(cam.x,player.x-120,0.07))
-	-- cam.y=math.min(64, lerp(cam.y,player.y-64,0.07))
+	-- cam.y=math.min(68, lerp(cam.y,player.y-68,0.07))
 end
 
 function game_state:draw()
-	cls(1)
-	map(0, 0, 240, 136, -cam.x, -cam.y)
+	cls(0)
+	map(0, 0, 240, 136, -cam.x, -cam.y, 0)
+
 	-- local ccx=cam.x/8+(cam.x%8==0 and 1 or 0)
 	-- local ccy=cam.y/8+(cam.y%8==0 and 1 or 0)
 	-- map(ccx-15,ccy-8,32,17,(cam.x%8)-8,(cam.y%8)-8)
+
 
 	-- test --
 	-- print("Cam X: "..cam.x.."  Cam Y: "..cam.y, 12, 6)
@@ -268,6 +294,8 @@ function game_state:draw()
 	
 
 	spr(player.sp, player.x-cam.x, player.y-cam.y, 0, 1, player.flp)
+
+	-- spr(player.sp, cam.x-120+player.x, cam.y-64+player.y, 0, 1, player.flp)
 
 	-- test --
 	-- rect(x_r-cam.x, y_r-cam.y, w_r, h_r, 15)
