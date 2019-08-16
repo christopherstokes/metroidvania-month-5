@@ -46,19 +46,19 @@ function collide_map(obj,aim,flag)
 		x2 = x+w+4
 		y2 = y+h-2
 	elseif aim=="up" then
-		x1 = x+1
+		x1 = x
 		y1 = y-1
-		x2 = x+w-1
+		x2 = x+w
 		y2 = y
 	elseif aim=="down" then
 		x1 = x
 		y1 = y+h
 		x2 = x+w
-		y2 = y+h
+		y2 = y+h+1
 	end
 
 	-- test --
-	x_r, y_r, w_r, h_r = x1, y1, x2-x1, y2-y1
+	-- x_r, y_r, w_r, h_r = x1, y1, x2-x1, y2-y1
 	----------
 
 
@@ -92,9 +92,9 @@ player = {
 	dx=0,
 	dy=0,
 	max_dx=3,
-	max_dy=3,
+	max_dy=4,
 	acc=0.5,
-	boost=4,
+	boost=5,
 	anim=0,
 	running=false,
 	jumping=false,
@@ -233,7 +233,7 @@ function game_state:init()
 	friction=0.85
 
 	-- test --
-	x_r, y_r, w_r, h_r = 0,0,0,0
+	-- x_r, y_r, w_r, h_r = 0,0,0,0
 	-- collide_l, collide_r, collide_u, collide_d = "no", "no", "no", "no"
 	----------
 
@@ -270,7 +270,7 @@ function game_state:draw()
 	spr(player.sp, player.x-cam.x, player.y-cam.y, 0, 1, player.flp)
 
 	-- test --
-	rect(x_r-cam.x, y_r-cam.y, w_r, h_r, 15)
+	-- rect(x_r-cam.x, y_r-cam.y, w_r, h_r, 15)
 	-- print("L: "..collide_l, player.x, player.y-6)
 	-- print("R: "..collide_r, player.x, player.y-12)
 	-- print("U: "..collide_u, player.x, player.y-18)
