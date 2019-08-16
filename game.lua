@@ -238,8 +238,6 @@ function game_state:update()
 	player_anim()
 	player_upd()
 
-	
-
 	cam.x=120-player.x
 	cam.y=68-player.y
 	
@@ -247,15 +245,15 @@ end
 
 function game_state:draw()
 	cls(1)
-	map(0,0)
+	map(0, 0, 240, 136, -cam.x, -cam.y)
 
-	-- print("Cam X: "..cam.x.."  Cam Y: "..cam.y, 12, 6)
-	-- print("PL X: "..player.x.."  PL Y: "..player.y, 12, 12)
-	-- print("DiffX: "..cam.x-player.x.."  DiffY: "..cam.y-player.y, 12, 18)
+	print("Cam X: "..cam.x.."  Cam Y: "..cam.y, 12, 6)
+	print("PL X: "..player.x.."  PL Y: "..player.y, 12, 12)
+	print("DiffX: "..cam.x-player.x.."  DiffY: "..cam.y-player.y, 12, 18)
 
 	
 
-	spr(player.sp, player.x, player.y, 0, 1, player.flp)
+	spr(player.sp, player.x-cam.x, player.y-cam.y, 0, 1, player.flp)
 
 	-- test --
 	rect(x_r, y_r, w_r, h_r, 15)
