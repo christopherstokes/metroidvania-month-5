@@ -50,7 +50,7 @@ function collide_map(obj,aim,flag)
 	end
 
 	-- test --
-	x_r, y_r, w_r, h_r = x1, y1, hb_w, hb_h
+	-- x_r, y_r, w_r, h_r = x1, y1, hb_w, hb_h
 	----------
 
 
@@ -143,8 +143,8 @@ function player_upd()
 			player.dy=0
 			player.y = player.y - (((player.y+player.h+1) % 8) - 1)
 			-- test --
-			collide_d = "yes"
-			else collide_d = "no"
+			-- collide_d = "yes"
+			-- else collide_d = "no"
 			----------
 		end
 	elseif player.dy<0 then
@@ -152,8 +152,8 @@ function player_upd()
 		if collide_map(player,"up","solid_colliders") then
 			player.dy=0
 			-- test --
-			collide_u = "yes"
-			else collide_u = "no"
+			-- collide_u = "yes"
+			-- else collide_u = "no"
 			----------
 		end
 	end
@@ -164,8 +164,8 @@ function player_upd()
 		if collide_map(player,"left","solid_colliders") then
 			player.dx=0
 			-- test --
-			collide_l = "yes"
-			else collide_l = "no"
+			-- collide_l = "yes"
+			-- else collide_l = "no"
 			----------
 		end
 	elseif player.dx>0 then
@@ -173,8 +173,8 @@ function player_upd()
 		if collide_map(player,"right","solid_colliders") then
 			player.dx=0
 			-- test --
-			collide_r = "yes"
-			else collide_r = "no"
+			-- collide_r = "yes"
+			-- else collide_r = "no"
 			----------
 		end
 	end
@@ -225,8 +225,8 @@ function game_state:init()
 	friction=0.85
 
 	-- test --
-	x_r, y_r, w_r, h_r = 0,0,0,0
-	collide_l, collide_r, collide_u, collide_d = "no", "no", "no", "no"
+	-- x_r, y_r, w_r, h_r = 0,0,0,0
+	-- collide_l, collide_r, collide_u, collide_d = "no", "no", "no", "no"
 	----------
 
 	--simple camera
@@ -238,8 +238,8 @@ function game_state:update()
 	player_anim()
 	player_upd()
 
-	cam.x=120-player.x
-	cam.y=68-player.y
+	cam.x=player.x-120
+	cam.y=player.y-68
 	
 end
 
@@ -247,20 +247,20 @@ function game_state:draw()
 	cls(1)
 	map(0, 0, 240, 136, -cam.x, -cam.y)
 
-	print("Cam X: "..cam.x.."  Cam Y: "..cam.y, 12, 6)
-	print("PL X: "..player.x.."  PL Y: "..player.y, 12, 12)
-	print("DiffX: "..cam.x-player.x.."  DiffY: "..cam.y-player.y, 12, 18)
+	-- print("Cam X: "..cam.x.."  Cam Y: "..cam.y, 12, 6)
+	-- print("PL X: "..player.x.."  PL Y: "..player.y, 12, 12)
+	-- print("DiffX: "..cam.x-player.x.."  DiffY: "..cam.y-player.y, 12, 18)
 
 	
 
 	spr(player.sp, player.x-cam.x, player.y-cam.y, 0, 1, player.flp)
 
 	-- test --
-	rect(x_r, y_r, w_r, h_r, 15)
-	print("L: "..collide_l, player.x, player.y-6)
-	print("R: "..collide_r, player.x, player.y-12)
-	print("U: "..collide_u, player.x, player.y-18)
-	print("D: "..collide_d, player.x, player.y-24)
+	-- rect(x_r, y_r, w_r, h_r, 15)
+	-- print("L: "..collide_l, player.x, player.y-6)
+	-- print("R: "..collide_r, player.x, player.y-12)
+	-- print("U: "..collide_u, player.x, player.y-18)
+	-- print("D: "..collide_d, player.x, player.y-24)
 	----------
 end
 
