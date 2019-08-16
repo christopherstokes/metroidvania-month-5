@@ -36,10 +36,10 @@ function collide_map(obj,aim,flag)
 	local x1,y1,x2,y2,hb_w,hb_h=0,0,0,0,0,0
 	
 	if aim=="left" then
-		x1,y1,x2,y2=x-1,y,x,y+h-1
+		x1,y1,x2,y2=x-2,y,x,y+h-2
 		hb_w, hb_h = 1, h
 	elseif aim=="right" then
-		x1,y1,x2,y2=x+w,y,x+w+1,y+h-1
+		x1,y1,x2,y2=x+w+1,y,x+w+2,y+h-2
 		hb_w, hb_h = 1, h
 	elseif aim=="up" then
 		x1,y1,x2,y2=x+1,y-1,x+w-1,y
@@ -50,7 +50,7 @@ function collide_map(obj,aim,flag)
 	end
 
 	-- test --
-	-- x_r, y_r, w_r, h_r = x1, y1, hb_w, hb_h
+	x_r, y_r, w_r, h_r = x1, y1, hb_w, hb_h
 	----------
 
 
@@ -91,7 +91,7 @@ player = {
 	running=false,
 	jumping=false,
 	falling=false,
-	sliding=false,
+	sliding_x=false,
 	landed=true,
 	hb={xoff=2, yoff=0, w=4, h=8}
 }
@@ -119,7 +119,7 @@ function player_upd()
 	and not btn(3)
 	and player.landed then
 		player.running=false
-		player.sliding=true
+		player.sliding_x=true
 	end
 	
 	--jump
@@ -179,12 +179,12 @@ function player_upd()
 		end
 	end
 	
-	--stop sliding
-	if player.sliding then
+	--stop sliding_x
+	if player.sliding_x then
 		if math.abs(player.dx) < .2
 		or player.running then
 			player.dx=0
-			player.sliding=false
+			player.sliding_x=false
 		end
 	end
 	
@@ -197,7 +197,7 @@ function player_anim()
 		player.sp=7
 	elseif player.falling then
 		player.sp=8
-	elseif player.sliding then
+	elseif player.sliding_x then
 		player.sp=9
 	elseif player.running then
 		if time()-player.anim>100 then
@@ -225,7 +225,7 @@ function game_state:init()
 	friction=0.85
 
 	-- test --
-	-- x_r, y_r, w_r, h_r = 0,0,0,0
+	x_r, y_r, w_r, h_r = 0,0,0,0
 	-- collide_l, collide_r, collide_u, collide_d = "no", "no", "no", "no"
 	----------
 
@@ -257,7 +257,7 @@ function game_state:draw()
 	spr(player.sp, player.x-cam.x, player.y-cam.y, 0, 1, player.flp)
 
 	-- test --
-	-- rect(x_r, y_r, w_r, h_r, 15)
+	rect(x_r-cam.x, y_r-cam.y, w_r, h_r, 15)
 	-- print("L: "..collide_l, player.x, player.y-6)
 	-- print("R: "..collide_r, player.x, player.y-12)
 	-- print("U: "..collide_u, player.x, player.y-18)
