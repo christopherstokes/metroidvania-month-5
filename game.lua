@@ -80,10 +80,11 @@ function collide_map(obj,aim,flag)
 	end
 end
 
-Animation = {}
-
-function Animation:create(frames, timing)
+function Animation(frames, timing)
 	local a = {}
+	a.frames = frames
+	a.timing = timing
+	return a
 end
 
 entities = {}
