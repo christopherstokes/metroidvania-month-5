@@ -80,15 +80,23 @@ function collide_map(obj,aim,flag)
 	end
 end
 
+Animation = {}
+
+function Animation:create(frames, timing)
+	local a = {}
+end
+
+entities = {}
 -- Entity
 function Entity(x, y, w, h, anim, hb)
-	e = {}
+	local e = {}
 	e.x = x
 	e.y = y
 	e.w = w
 	e.h = h
 	e.anim = anim
 	e.hb = hb
+	table.insert(entities, e)
 	return e
 end
 -----------------
