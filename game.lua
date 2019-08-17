@@ -5,7 +5,7 @@
 colliders = {
 	-- tiles that only can be collided when falling onto them from above
 	top_colliders = {
-		[192]=true, [193]=true, [160]=true, [161]=true, [162]=true, [163]=true, [176]=true, [177]=true
+		[192]=true, [193]=true
 	},
 	-- completely solid tiles that cannot be moved through
 	solid_colliders= {
@@ -80,6 +80,18 @@ function collide_map(obj,aim,flag)
 	end
 end
 
+-- Entity
+function Entity(x, y, w, h, anim, hb)
+	e = {}
+	e.x = x
+	e.y = y
+	e.w = w
+	e.h = h
+	e.anim = anim
+	e.hb = hb
+	return e
+end
+-----------------
 
 -- player
 player = {
@@ -146,7 +158,7 @@ function player_upd()
 		
 		player.dy=limit_speed(player.dy,player.max_dx)
 		
-		if collide_map(player,"down","top_colliders") then
+		if collide_map(player,"down","top_colliders") or collide_map(player,"down","solid_colliders") then
 			player.landed=true
 			player.falling=false
 			player.dy=0
