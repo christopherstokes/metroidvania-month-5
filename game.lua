@@ -288,22 +288,33 @@ function game_state:update()
 	player_anim()
 	player_upd()
 
-	cam.x=player.x-120
-	cam.y=player.y-68
+	if player.dx < 0 then
+		cam.x=math.floor(lerp(cam.x, player.x-184, 0.05))
+	elseif player.dx > 0 then
+		cam.x=math.floor(lerp(cam.x, player.x-48, 0.05))
+	else 
+		cam.x=math.floor(lerp(cam.x, player.x-120, 0.05))
+	end
 
-	-- cam.x=math.min(120, player.x-120)
-	-- cam.y=math.min(64, player.y-64)
+	if player.dy < 0 then
+		cam.y=math.floor(lerp(cam.y, player.y-96, 0.05))
+	elseif player.dy > 0 then
+		cam.y=math.floor(lerp(cam.y, player.y-32, 0.05))
+	else
+		cam.y=math.floor(lerp(cam.y, player.y-64, 0.05))
+	end
 
-	-- cam.x=math.min(120, lerp(cam.x,player.x-120,0.07))
-	-- cam.y=math.min(68, lerp(cam.y,player.y-68,0.07))
+
+	-- cam.x=math.floor(lerp(cam.x, player.x-120, 0.07))
+	-- cam.y=math.floor(lerp(cam.y, player.y-64, 0.07))
 end
 
 function game_state:draw()
 	cls(0)
 	map(0, 0, 240, 136, -cam.x, -cam.y, 0)
 
-	-- local ccx=cam.x/8+(cam.x%8==0 and 1 or 0)
-	-- local ccy=cam.y/8+(cam.y%8==0 and 1 or 0)
+	-- local ccx=cam.x/8
+	-- local ccy=cam.y/8
 	-- map(ccx-15,ccy-8,32,17,(cam.x%8)-8,(cam.y%8)-8)
 
 
