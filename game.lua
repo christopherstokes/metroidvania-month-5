@@ -319,6 +319,12 @@ function game_state:update()
 		cam.y=math.floor(lerp(cam.y, player.y-64, 0.05))
 	end
 
+	cam.x = math.max(0, cam.x)
+	cam.y = math.max(0, cam.y)
+
+	cam.x = math.min(cam.x, 1920-240)
+	cam.y = math.min(cam.y, 1088-136)
+
 
 	-- cam.x=math.floor(lerp(cam.x, player.x-120, 0.07))
 	-- cam.y=math.floor(lerp(cam.y, player.y-64, 0.07))
