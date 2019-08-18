@@ -110,8 +110,8 @@ end
 -- player
 player = {
 	sp=1,
-	x=120,
-	y=68,
+	x=75,
+	y=0,
 	w=8,
 	h=8,
 	flp=0,
@@ -332,19 +332,16 @@ function game_state:draw()
 	-- local ccy=cam.y/8
 	-- map(ccx-15,ccy-8,32,17,(cam.x%8)-8,(cam.y%8)-8)
 
-
 	-- test --
 	-- print("Cam X: "..cam.x.."  Cam Y: "..cam.y, 12, 6)
 	-- print("PL X: "..player.x.."  PL Y: "..player.y, 12, 12)
 	-- print("DiffX: "..cam.x-player.x.."  DiffY: "..cam.y-player.y, 12, 18)
 	----------
 	
-
 	spr(player.sp, player.x-cam.x, player.y-cam.y, 0, 1, player.flp)
-
-	-- spr(player.sp, cam.x-120+player.x, cam.y-64+player.y, 0, 1, player.flp)
-
+	
 	-- test --
+	-- print("x: "..player.x..", y: "..player.y, player.x-cam.x-24, player.y-cam.y-8)
 	-- rect(x_r-cam.x, y_r-cam.y, w_r, h_r, 15)
 	-- print("L: "..collide_l, player.x, player.y-6)
 	-- print("R: "..collide_r, player.x, player.y-12)
