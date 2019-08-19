@@ -122,6 +122,8 @@ player = {
 	acc=0.5,
 	boost=5,
 	anim=0,
+	dbl_jump=2,
+	dbl_jump_max=2,
 	running=false,
 	jumping=false,
 	falling=false,
@@ -157,19 +159,18 @@ function player_upd()
 		player.sliding_x=true
 	end
 
-	
-	
 	--jump
 	if btnp(4)
-	and player.landed then
+	and (player.landed or player.dbl_jump > 0) then
 		player.dy = player.dy-player.boost
-		player.landed=false
+		player.landed = false
+		player.dbl_jump = player.dbl_jump - 1
 	end
 
 	-- drop through top_collider
 	if btnp(1) and player.landed 
 	and collide_map(player,"down","top_colliders") then
-		player.y = player.y+8
+		player.y = player.y+7
 		player.landed=false
 		player.falling=true
 	end
@@ -247,8 +248,8 @@ function player_upd()
 		end
 	end
 
-	if player.sliding_y then
-
+	if player.landed then
+		player.dbl_jump = player.dbl_jump_max
 	end
 	
 	player.x = math.floor(player.x + player.dx)
