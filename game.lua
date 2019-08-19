@@ -1,4 +1,4 @@
-	-- title:  game title
+-- title:  game title
 -- author: game developer
 -- desc:   short description
 -- script: lua
@@ -324,32 +324,33 @@ function game_state:update()
 		cam.y=math.floor(lerp(cam.y, player.y-64, 0.05))
 	end
 
+
+	-- cam.x=math.floor(lerp(cam.x, player.x-120, 0.07))
+	-- cam.y=math.floor(lerp(cam.y, player.y-64, 0.07))
+
 	cam.x = math.max(0, cam.x)
 	cam.y = math.max(0, cam.y)
 
 	cam.x = math.min(cam.x, 1920-240)
 	cam.y = math.min(cam.y, 1088-136)
-
-
-	-- cam.x=math.floor(lerp(cam.x, player.x-120, 0.07))
-	-- cam.y=math.floor(lerp(cam.y, player.y-64, 0.07))
 end
 
 function game_state:draw()
 	cls(0)
 	map(0, 0, 240, 136, -cam.x, -cam.y, 0)
 
-	-- local ccx=cam.x/8
-	-- local ccy=cam.y/8
+	local ccx=cam.x/8+(cam.x%8==0 and 1 or 0)
+	local ccy=cam.y/8+(cam.y%8==0 and 1 or 0)
 	-- map(ccx-15,ccy-8,32,17,(cam.x%8)-8,(cam.y%8)-8)
 
 	-- test --
+	print("CCX: "..ccx.." CCY: "..ccy, 12, 6)
 	-- print("Cam X: "..cam.x.."  Cam Y: "..cam.y, 12, 6)
 	-- print("PL X: "..player.x.."  PL Y: "..player.y, 12, 12)
 	-- print("DiffX: "..cam.x-player.x.."  DiffY: "..cam.y-player.y, 12, 18)
 	----------
 	
-	spr(player.sp, player.x-cam.x, player.y-cam.y, 0, 1, player.flp)
+	spr(player.sp, (player.x-cam.x), (player.y-cam.y), 0, 1, player.flp)
 	
 	-- test --
 	-- print("x: "..player.x..", y: "..player.y, player.x-cam.x-24, player.y-cam.y-8)
