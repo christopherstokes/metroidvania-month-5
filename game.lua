@@ -301,6 +301,9 @@ function game_state:init()
 
 	--simple camera
 	cam={x=120, y=68}
+
+	camDiffX = 120
+	camDiffY = 64
 end
 
 function game_state:update()
@@ -309,24 +312,24 @@ function game_state:update()
 	player_upd()
 
 	if player.dx < 0 then
-		cam.x=math.floor(lerp(cam.x, player.x-184, 0.05))
+		camDiffX = 184
 	elseif player.dx > 0 then
-		cam.x=math.floor(lerp(cam.x, player.x-48, 0.05))
+		camDiffX = 48
 	else 
-		cam.x=math.floor(lerp(cam.x, player.x-120, 0.05))
+		camDiffX = 120
 	end
 
 	if player.dy < 0 then
-		cam.y=math.floor(lerp(cam.y, player.y-96, 0.05))
+		camDiffY = 96
 	elseif player.dy > 0 then
-		cam.y=math.floor(lerp(cam.y, player.y-32, 0.05))
+		camDiffY = 32
 	else
-		cam.y=math.floor(lerp(cam.y, player.y-64, 0.05))
+		camDiffY = 64
 	end
 
-
-	-- cam.x=math.floor(lerp(cam.x, player.x-120, 0.07))
-	-- cam.y=math.floor(lerp(cam.y, player.y-64, 0.07))
+	cam.x=math.floor(lerp(cam.x, player.x-camDiffX, 0.07))
+	cam.y=math.floor(lerp(cam.y, player.y-camDiffY, 0.07))
+	
 
 	cam.x = math.max(0, cam.x)
 	cam.y = math.max(0, cam.y)
@@ -339,12 +342,12 @@ function game_state:draw()
 	cls(0)
 	map(0, 0, 240, 136, -cam.x, -cam.y, 0)
 
-	local ccx=cam.x/8+(cam.x%8==0 and 1 or 0)
-	local ccy=cam.y/8+(cam.y%8==0 and 1 or 0)
-	-- map(ccx-15,ccy-8,32,17,(cam.x%8)-8,(cam.y%8)-8)
+	-- local ccx=cam.x/8+(cam.x%8==0 and 1 or 0)
+	-- local ccy=cam.y/8+(cam.y%8==0 and 1 or 0)
+	-- map(ccx-15,ccy-8,32,17,(cam.x%8)-8,(cam.y%8)-8, 0)
 
 	-- test --
-	print("CCX: "..ccx.." CCY: "..ccy, 12, 6)
+	-- print("CCX: "..ccx.." CCY: "..ccy, 12, 6)
 	-- print("Cam X: "..cam.x.."  Cam Y: "..cam.y, 12, 6)
 	-- print("PL X: "..player.x.."  PL Y: "..player.y, 12, 12)
 	-- print("DiffX: "..cam.x-player.x.."  DiffY: "..cam.y-player.y, 12, 18)
