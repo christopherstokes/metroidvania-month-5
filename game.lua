@@ -182,10 +182,20 @@ function entity_draw(entity)
 	spr(f.sp, entity.x-cam.x, entity.y-cam.y, f.ck, f.scl, entity.flp, f.rot, f.w/8, f.h/8)
 end
 -----------------
-
+-- enemy animations
 slime_anim = {}
 slime_anim.idle = Animation({Frame(17),Frame(18),Frame(17),Frame(19)},10)
--- enemies
+
+-- enemy behaviors
+-- functions that trigger specific behavior
+function b_patrol(entity)
+
+end
+
+function b_chase(entity)
+
+end
+
 slime = Entity(90, 25, 8, 8, slime_anim)
 slime.dy = 1
 
