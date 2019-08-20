@@ -85,23 +85,61 @@ function collide_map(obj,aim,flag)
 	end
 end
 
+
+-- probably too complicated for this -- overthinking things
 function Animation(frames, timing)
 	local a = {}
 	a.frames = frames
-	a.timing = timing
+	a.timing = timing or 10
+	a.time = time()
+	a.current_frame = 1
 	return a
+end
+
+function Frame(sp, w, h, ck, scl, rot)
+	local f = {}
+	f.sp = sp
+	f.w = w or 8
+	f.h = h or 8
+	f.ck = ck or 0
+	f.scl = scl or 1
+	f.rot = rot or 0
+	return f
+end
+
+function update_animation(anim)
+	if (t%anim.timing == 0) then
+		anim.current_frame = anim.current_frame + 1
+	end
+
+	if anim.current_frame > #anim.frames then
+		anim.current_frame = 1
+	end
+end
+
+function draw_animation(anim, x, y, flp)
+	local f = anim.frames[anim.current_frame]
+	spr(f.sp, x, y, f.ck, f.scl, flp, f.rot, f.w, f.h)
 end
 
 entities = {}
 -- Entity
-function Entity(x, y, w, h, anim, hb)
+function Entity(x, y, w, h, anims, hb, max_dx, max_dy, acc, boost)
 	local e = {}
 	e.x = x
 	e.y = y
+	e.dx=0
+	e.dy=0
+	e.max_dx=max_dx or 0
+	e.max_dy=max_dy or 0
+	e.acc = acc or 0
+	e.boost = boost or 0
 	e.w = w
 	e.h = h
-	e.anim = anim
-	e.hb = hb
+	e.flp = 0
+	e.anims = anims
+	e.current_anim = "idle"
+	e.hb = hb or {xoff=0, yoff=0, w=w, h=h}
 	table.insert(entities, e)
 	return e
 end
@@ -132,6 +170,17 @@ player = {
 	landed=true,
 	hb={xoff=2, yoff=0, w=4, h=8}
 }
+
+-- player = Entity(75, 0, 8, 8, {
+-- 	"idle" = Animation({
+-- 		Frame(1)
+-- 	}),
+-- 	"running" = Animation({
+-- 		Frame()
+-- 	})
+-- })
+
+-- table.insert(entities, player)
 
 function player_upd()
 	--physics
