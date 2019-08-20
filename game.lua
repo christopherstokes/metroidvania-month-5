@@ -108,6 +108,7 @@ function Frame(sp, w, h, ck, scl, rot)
 end
 
 function update_animation(anim)
+	-- trace(t)
 	if (t%anim.timing == 0) then
 		anim.current_frame = anim.current_frame + 1
 	end
@@ -115,11 +116,6 @@ function update_animation(anim)
 	if anim.current_frame > #anim.frames then
 		anim.current_frame = 1
 	end
-end
-
-function draw_animation(anim, x, y, flp)
-	local f = anim.frames[anim.current_frame]
-	spr(f.sp, x, y, f.ck, f.scl, flp, f.rot, f.w, f.h)
 end
 
 entities = {}
@@ -130,8 +126,8 @@ function Entity(x, y, w, h, anims, hb, max_dx, max_dy, acc, boost)
 	e.y = y
 	e.dx=0
 	e.dy=0
-	e.max_dx=max_dx or 0
-	e.max_dy=max_dy or 0
+	e.max_dx=max_dx or 3
+	e.max_dy=max_dy or 4
 	e.acc = acc or 0
 	e.boost = boost or 0
 	e.w = w
@@ -143,10 +139,55 @@ function Entity(x, y, w, h, anims, hb, max_dx, max_dy, acc, boost)
 	table.insert(entities, e)
 	return e
 end
+
+function entity_update(entity)
+	entity.dy = entity.dy+gravity
+	entity.dx = entity.dx*friction
+
+	if entity.dy>0 then		
+		entity.dy=limit_speed(entity.dy,entity.max_dx)
+				if collide_map(entity,"down","top_colliders") or collide_map(entity,"down","solid_colliders") then
+			entity.dy=0
+			entity.y = entity.y - (((entity.y+entity.h+1) % 8) - 1)
+		end
+	elseif entity.dy<0 then
+		entity.jumping=true
+		if collide_map(entity,"up","solid_colliders") then
+			entity.dy=0
+		end		
+	end
+	
+	--check collision l/r
+	if entity.dx<0 then
+		entity.dx=limit_speed(entity.dx,entity.max_dx)
+		if collide_map(entity,"left","solid_colliders") then
+			entity.dx=0
+		end
+	elseif entity.dx>0 then
+		entity.dx=limit_speed(entity.dx,entity.max_dx)
+		if collide_map(entity,"right","solid_colliders") then
+			entity.dx=0
+		end
+	end
+
+	entity.x = math.floor(entity.x + entity.dx)
+	entity.y = math.floor(entity.y + entity.dy)
+
+	update_animation(entity.anims[entity.current_anim])
+end
+
+function entity_draw(entity)
+	local anim = entity.anims[entity.current_anim]
+	local f = anim.frames[anim.current_frame]
+	spr(f.sp, entity.x-cam.x, entity.y-cam.y, f.ck, f.scl, entity.flp, f.rot, f.w/8, f.h/8)
+end
 -----------------
 
+slime_anim = {}
+slime_anim.idle = Animation({Frame(17),Frame(18),Frame(17),Frame(19)},10)
 -- enemies
-
+slime = Entity(90, 25, 8, 8, slime_anim)
+slime.dy = 1
 
 -- player
 player = {
@@ -359,7 +400,6 @@ function game_state:init()
 end
 
 function game_state:update()
-	t=t+1
 	player_anim()
 	player_upd()
 
@@ -388,6 +428,10 @@ function game_state:update()
 
 	cam.x = math.min(cam.x, 1920-240)
 	cam.y = math.min(cam.y, 1088-136)
+
+	for e=1, #entities do
+		entity_update(entities[e])
+	end
 end
 
 function game_state:draw()
@@ -407,6 +451,10 @@ function game_state:draw()
 	
 	spr(player.sp, (player.x-cam.x), (player.y-cam.y), 0, 1, player.flp)
 	
+	for e=1, #entities do
+		entity_draw(entities[e])
+	end
+
 	-- test --
 	-- print("x: "..player.x..", y: "..player.y, player.x-cam.x-24, player.y-cam.y-8)
 	-- rect(x_r-cam.x, y_r-cam.y, w_r, h_r, 15)
@@ -428,6 +476,7 @@ function TIC()
 	current_state.draw()	
 
 	t=t+1
+	
 end
 
 -- <TILES>
